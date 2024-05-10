@@ -12,8 +12,8 @@ import Image from 'next/image';
 const Slider = ({sliderList}) => {
     return (
         <div>
-            <Carousel>
-            <CarouselContent>
+            <Carousel className="mx-5 md:mx-0">
+            <CarouselContent >
                 {
                     sliderList.map((slider,index)=>(
                         <CarouselItem key={index}>
