@@ -1,6 +1,16 @@
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import React from 'react';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
+import ProductItemDetails from './ProductItemDetails';
+  
 
 const ProductItem = ({product}) => {
     return (
@@ -22,9 +32,24 @@ const ProductItem = ({product}) => {
           
             <h2 className={`font-bold ${product.attributes.sellingPrice&&'line-through text-gray-400'}`}>${product.attributes.mrp}</h2>
            </div>
-           <div className="">
-            <Button variant="outline" className="text-green-800 hover:bg-primary hover:text-white">Add to Cart</Button>
-           </div>
+
+            <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="outline" className="text-green-800 hover:bg-primary hover:text-white mb-3">
+                Add to Cart
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <ProductItemDetails product={product}></ProductItemDetails>
+                <DialogDescription>
+                    
+                </DialogDescription>
+                </DialogHeader>
+            </DialogContent>
+            </Dialog>
+
+
         </div>
     );
 };
