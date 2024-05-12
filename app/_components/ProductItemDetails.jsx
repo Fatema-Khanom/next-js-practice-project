@@ -1,9 +1,16 @@
+"use client"
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 
 const ProductItemDetails = ({product}) => {
+    const [productTotalPrice,setProductPrice]=useState(
+        product.attributes.sellingPrice?
+        product.attributes.sellingPrice:
+        product.attributes.mrp
+    )
+    const [quantity,setQuantity]=useState(1)
     return (
         <div className='grid grid-cols-1 md:grid-cols-2 p-7 bg-white text-black'>
             <Image
@@ -27,11 +34,14 @@ const ProductItemDetails = ({product}) => {
            </div>
            <h2 className="text-lg font-semibold py-3">Quantity {product.attributes.itemQuantityType}</h2>
            <div className="flex flex-col items-baseline">
-                <div className="flex gap-10 border items-center p-2 px-5 ">
-                    <button>-</button>
-                    <h2 className="">1</h2>
-                    <button>+</button>
+               <div className="flex gap-3 items-center">
+               <div className="flex gap-10 border items-center p-2 px-5 ">
+                    <button disabled={quantity===1} onClick={()=>setQuantity(quantity-1)}>-</button>
+                    <h2 className="">{quantity}</h2>
+                    <button onClick={()=>setQuantity(quantity+1)}>+</button>
                 </div>
+                <h2 className="font-bold text-2xl">= ${(quantity*productTotalPrice).toFixed(2)}</h2>
+               </div>
            </div>
            <Button className="gap-2 my-3 bg-green-700"><ShoppingCart></ShoppingCart> Add to Cart</Button>
            <h2 className=""><span className='font-bold'>Category:</span> {product.attributes.categories.data[0].attributes.name}</h2>

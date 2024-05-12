@@ -17,10 +17,20 @@ const getCategoryList=()=>axiosClient.get('/categories?populate=*').then(res=>{
 const getAllProducts=()=>axiosClient.get('/products?populate=*').then(res=>{
     return res.data.data
 })
+const getProductsBycatrgory=(category)=>axiosClient.get('/products?filters[categories][name][$in]='+category+"&populate=*").then(res=>{
+    return res.data.data
+})
 
+const registerUser = (username,email,password)=>axiosClient.post('/auth/local/register',{
+    username:username,
+    email:email,
+    password:password
+});
 export default{
     getCategory,
     getSliders,
     getCategoryList,
-    getAllProducts
+    getAllProducts,
+    getProductsBycatrgory,
+    registerUser
 }

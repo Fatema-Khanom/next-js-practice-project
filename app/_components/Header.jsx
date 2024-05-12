@@ -12,6 +12,7 @@ import {
   } from "@/components/ui/dropdown-menu"
 import GlobalApi from '../_util/GlobalApi'
 import Image from 'next/image'
+import Link from 'next/link'
   
 
 function Header() {
@@ -46,7 +47,8 @@ function Header() {
                     <DropdownMenuLabel>Browse Category</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {categoryList.map((category,index)=>(
-                        <DropdownMenuItem className="flex gap-2 cursor-pointer items-center">
+                        <Link href={'/products-category/'+category?.attributes?.name}>
+                            <DropdownMenuItem className="flex gap-2 cursor-pointer items-center">
                             <Image src={
                                category?.attributes?.icon?.data?.attributes?.url}
                                  unoptimized={true}
@@ -57,6 +59,7 @@ function Header() {
                                     </Image>
                             <h2>{category?.attributes?.name}</h2>
                         </DropdownMenuItem>
+                        </Link>
                     ))}
                     
                 </DropdownMenuContent>
