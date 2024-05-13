@@ -1,24 +1,41 @@
+"use client"
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { LoaderIcon } from 'lucide-react';
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner';
-const [email,setEmail]= useState();
-const [password,setPassword]= useState();
-const onSignIn=()=>{
-//     GlobalApi.registerUser(username,email,password).then(res=>{
-//         console.log(res.data.user)
-//         console.log(res.data.jwt)
-//         sessionStorage.setItem("user",JSON.stringify(res.data.user));
-//         sessionStorage.setItem("jwt",res.data.jwt);
-//         toast("Account Created Successfully")
-//         router.push('/');
-        
-//     },(e)=>{
-//         toast("Error while creating account")
-//     }
-// )
-}
+
 function SignIn() {
+    const [email,setEmail]= useState();
+    const [password,setPassword]= useState();
+    const router = useRouter();
+    const [loader,setLoader]=useState();
+    useEffect(()=>{
+        const jwt = sessionStorage.getItem('jwt');
+        if(jwt){
+            router.push("/");
+        }
+    },[])        
+    const onSignIn=()=>{
+        setLoader(true)
+    GlobalApi.signIn(email,password).then(res=>{
+        console.log(res.data.user)
+        console.log(res.data.jwt)
+        sessionStorage.setItem("user",JSON.stringify(res.data.user));
+        sessionStorage.setItem("jwt",res.data.jwt);
+        toast("Login Successfully")
+        router.push('/');
+        setLoader(false)
+        
+    },(e)=>{
+        toast(e?.response?.data?.error?.message);
+        setLoader(false)
+    }
+)
+}
   return (
     <div className='flex items-baseline justify-center my-20'>
     <div className="flex flex-col items-center justify-center p-10 bg-slate-100 border-gray-200">
@@ -40,7 +57,7 @@ function SignIn() {
        />
     <Button onClick={()=>onSignIn()}
         disabled={!(email||password)}
-    >Create an Account</Button>
+    > {loader?<LoaderIcon className='animate-spin'></LoaderIcon>:"Sign In"}</Button>
     <h2 className="">Don't have an account? <Link href={'/create-account'} className='text-blue-500'>Click here to Create accoumt</Link></h2>
     </div>
     </div>

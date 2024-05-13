@@ -1,6 +1,6 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { LayoutGrid, Search, ShoppingCart } from 'lucide-react'
+import { CircleUserRoundIcon, LayoutGrid, Search, ShoppingCart } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import {
     DropdownMenu,
@@ -13,14 +13,21 @@ import {
 import GlobalApi from '../_util/GlobalApi'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
   
 
 function Header() {
     const [categoryList,setCategoryList]= useState([]);
+    const isLogin=sessionStorage.getItem('jwt')?true:false;
+    const router=useRouter();
+    const onSignOut=()=>{
+        sessionStorage.clear();
+        router.push('/sign-in');
+    }
     useEffect(()=>{
         getCategoryList();
     },[])
-
+ 
     const getCategoryList=()=>{
         GlobalApi.getCategory().then(res=>{
             console.log("categoryList resp",res.data.data);
@@ -47,7 +54,7 @@ function Header() {
                     <DropdownMenuLabel>Browse Category</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {categoryList.map((category,index)=>(
-                        <Link href={'/products-category/'+category?.attributes?.name}>
+                        <Link key={"index"} href={'/products-category/'+category?.attributes?.name}>
                             <DropdownMenuItem className="flex gap-2 cursor-pointer items-center">
                             <Image src={
                                category?.attributes?.icon?.data?.attributes?.url}
@@ -72,7 +79,27 @@ function Header() {
         </div>
         <div className="flex gap-5 items-center">
            <h2 className='flex gap-2 text-lg'> <ShoppingCart></ShoppingCart>0</h2>
-            <Button>Login</Button>
+            {
+                !isLogin?
+                <Link href={'/sign-in'}>
+                <Button>Login</Button></Link>
+                : 
+                <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <CircleUserRoundIcon className='h-12 w-12 bg-green-100 text-primary p-2 rounded-full'></CircleUserRoundIcon>
+                </DropdownMenuTrigger >
+                <DropdownMenuContent>
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                    <DropdownMenuItem>My Order</DropdownMenuItem>
+                    <DropdownMenuItem onClick={()=>onSignOut()}>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+                </DropdownMenu>
+
+           
+           }
+            
         </div>
 
     </div>
